@@ -1,6 +1,5 @@
-package com.tictactoe.graphicinterface;
+package com.tictactoe.gui;
 
-import com.tictactoe.getDatas.CreateButton;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 

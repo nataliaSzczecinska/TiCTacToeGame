@@ -19,6 +19,22 @@ public class Texts {
     }
 
     public String whatSign() {
-        return "Choice tou sign: ";
+        return "Choose your sign: ";
+    }
+
+    public String difficultyLevel(){
+        return "Choose the difficulty level: ";
+    }
+
+    public String easy() {
+        return " easy ";
+    }
+
+    public String middle() {
+        return " middle ";
+    }
+
+    public String difficult(){
+        return " difficult ";
     }
 }

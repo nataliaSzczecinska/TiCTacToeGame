@@ -1,8 +1,8 @@
-package com.tictactoe.getDatas;
+package com.tictactoe.buttons;
 
 import com.tictactoe.display.DisplayTexts;
 import com.tictactoe.display.Texts;
-import com.tictactoe.graphicinterface.Sign;
+import com.tictactoe.gui.Sign;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;

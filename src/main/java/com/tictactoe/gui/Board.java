@@ -1,10 +1,10 @@
-package com.tictactoe.graphicinterface;
+package com.tictactoe.gui;
 
 import com.tictactoe.display.DisplayTexts;
 import com.tictactoe.display.Texts;
 import com.tictactoe.game.Coordinates;
 import com.tictactoe.game.TicTacToeGame;
-import com.tictactoe.getDatas.CreateButton;
+import com.tictactoe.buttons.CreateButton;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -15,15 +15,8 @@ import javafx.stage.Stage;
 
 
 public class Board extends BorderPane {
-    private Image imageBackgroundCentre = new Image("file:src/main/resources/grayBackground.jpg");
-    private Image imageBackgroundTopOrBottom = new Image("file:src/main/resources/darkGrayBackground.jpg");
-    private BackgroundSize backgroundSizeCentre = new BackgroundSize(100, 100, true, true, true, true);
-    private BackgroundImage backgroundImageCentre = new BackgroundImage(imageBackgroundCentre, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSizeCentre);
-    private Background backgroundCentre = new Background(backgroundImageCentre);
-    private BackgroundSize backgroundSizeTopOrBottom = new BackgroundSize(100, 100, true, true, true, true);
-    private BackgroundImage backgroundImageTopOrBottom = new BackgroundImage(imageBackgroundTopOrBottom, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSizeTopOrBottom);
-    private Background backgroundTopOrBottom = new Background(backgroundImageTopOrBottom);
 
+    private final static BackgroundView backgroundView = new BackgroundView();
     private int matrixSize = 3;
     private char winnerSign = 'n';
     private char sign = 'X';
@@ -35,6 +28,7 @@ public class Board extends BorderPane {
     private CreateButton createButton = new CreateButton();
     private Sign displaySign = new Sign();
     private TicTacToeGame game = new TicTacToeGame(matrixSize);
+    private String difficulty = texts.easy();
     private final Background backgroundX = displaySign.matrixChoice('X', centreWidth, matrixSize);
     private final Background backgroundO = displaySign.matrixChoice('O', centreWidth, matrixSize);
 
@@ -58,7 +52,7 @@ public class Board extends BorderPane {
         double signSize = 0.8 * centreWidth;
         signSize = signSize/matrixSize;
 
-        grid.setBackground(backgroundCentre);
+        grid.setBackground(backgroundView.getBackgroundCentre());
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(0.1 * signSize);
         grid.setVgap(0.1 * signSize);
@@ -67,7 +61,7 @@ public class Board extends BorderPane {
 
         for (int i = 0 ; i < matrixSize ; i++) {
             for (int j = 0 ; j < matrixSize ; j++) {
-                grid.add(buttonTab[i][j], i, j);
+                grid.add(buttonTab[i][j], j, i);
             }
         }
 
@@ -76,64 +70,64 @@ public class Board extends BorderPane {
                 int finalI = i;
                 int finalJ = j;
                 buttonTab[i][j].setOnAction(action -> {
-                    if (buttonTab[finalI][finalJ].getBackground().equals(backgroundX) ||
-                            buttonTab[finalI][finalJ].getBackground().equals(backgroundO)) {
-                        System.out.println("Incorrect move! This area has chosen before.");
-                    } else {
-                        buttonTab[finalI][finalJ].setBackground(
-                                displaySign.matrixChoice(sign, centreWidth, matrixSize));
-                        game.addMove(sign, finalI, finalJ);
-
-                        winnerSign = game.whoWin();
-                        if (winnerSign != 'n') {
-                            winnerSign = 'n';
-
-                            Stage newWindow = new Stage();
-                            Scene newScene = endGameWindow(newWindow, stage);
-
-                            newWindow.setScene(newScene);
-                            newWindow.setTitle("Tic-Tac-Toe");
-                            newWindow.centerOnScreen();
-                            newWindow.show();
-
-                            game.cleanTab(matrixSize);
-                            this.setCenter(createCentre(stage));
+                    do {
+                        if (buttonTab[finalI][finalJ].getBackground().equals(backgroundX) ||
+                                buttonTab[finalI][finalJ].getBackground().equals(backgroundO) ||
+                                game.getSignTab()[finalI][finalJ] == 'X' ||
+                                game.getSignTab()[finalI][finalJ] == 'O') {
+                            System.out.println("Incorrect move! This area has chosen before.");
+                            try {
+                                System.out.println("I am waiting for correct move");
+                                wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            continue;
+                        } else {
+                            buttonTab[finalI][finalJ].setBackground(
+                                    displaySign.matrixChoice(sign, centreWidth, matrixSize));
+                            game.addMove(sign, finalI, finalJ);
+                            break;
                         }
+                    } while (true);
 
+                    winnerSign = game.whoWin();
+                    if ('n' != winnerSign) {
+                        winnerSign = 'n';
+
+                        Stage newWindow = new Stage();
+                        Scene newScene = endGameWindow(newWindow, stage);
+
+                        newWindow.setScene(newScene);
+                        newWindow.setTitle("Tic-Tac-Toe");
+                        newWindow.centerOnScreen();
+                        newWindow.show();
+
+                        game.cleanTab(matrixSize);
+                    } else {
                         do {
                             System.out.println("Computer move");
                             Coordinates coordinates = new Coordinates();
                             Background computerBackgroundPlace =
-                                    game.computerMove(sign, centreWidth, matrixSize, coordinates);
+                                    game.computerMove(sign, centreWidth, matrixSize,
+                                            coordinates, difficulty);
                             System.out.println("ComputerRow = " + coordinates.getRow() +
                                     " computerColumn = " + coordinates.getColumn());
                             if (buttonTab[coordinates.getRow()][coordinates.getColumn()].equals(backgroundX)
-                                    || buttonTab[coordinates.getRow()][coordinates.getColumn()].equals(backgroundO)) {
-                                System.out.println("Incorrect move! This area has chosen before.");
+                                || buttonTab[coordinates.getRow()][coordinates.getColumn()].equals(backgroundO)) {
+                                System.out.println("In Board. Incorrect move! This area has chosen before.");
                                 continue;
                             } else {
                                 buttonTab[coordinates.getRow()][coordinates.getColumn()]
                                         .setBackground(computerBackgroundPlace);
+                                game.displayGameTable();
                                 break;
                             }
-                        } while(true);
-
-                        winnerSign = game.whoWin();
-
-                        if (winnerSign != 'n') {
-                            winnerSign = 'n';
-                            Stage newWindow = new Stage();
-                            Scene newScene = endGameWindow(newWindow, stage);
-
-                            newWindow.setScene(newScene);
-                            newWindow.setTitle("Tic-Tac-Toe");
-                            newWindow.centerOnScreen();
-                            newWindow.show();
-
-                            game.cleanTab(matrixSize);
-                            this.setCenter(createCentre(stage));
-                        }
+                        } while (true);
                     }
+
+                    winnerSign = game.whoWin();
+                    displayEndingWindow(stage);
                 });
             }
         }
@@ -142,10 +136,9 @@ public class Board extends BorderPane {
 
     private VBox createTop(Stage stage) {
         VBox top = new VBox();
-        top.setBackground(backgroundTopOrBottom);
+        top.setBackground(backgroundView.getBackgroundTopOrBottom());
         top.setAlignment(Pos.CENTER);
-        int topHight = 200;
-        top.setPrefWidth(topHight);
+        top.setPrefWidth(200);
         top.setSpacing(10);
 
         Text welcomeText = displayTexts.textDisplayArial20WithUnderline(texts.startGame());
@@ -159,11 +152,17 @@ public class Board extends BorderPane {
         signAsk.setAlignment(Pos.CENTER);
         signAsk.setSpacing(10);
 
+        HBox difficultyLevel = new HBox();
+        difficultyLevel.setAlignment(Pos.CENTER);
+        difficultyLevel.setSpacing(10);
+
         Text howManyPlaces = displayTexts.textDisplayTimesNewRoman16(texts.askMatrixSize());
         Text whatSign = displayTexts.textDisplayTimesNewRoman16(texts.whatSign());
+        Text difficulty = displayTexts.textDisplayTimesNewRoman16(texts.difficultyLevel());
 
         ToggleGroup matrixButtons = new ToggleGroup();
         ToggleGroup signChoice = new ToggleGroup();
+        ToggleGroup difficultyLevelGroup = new ToggleGroup();
 
         RadioButton matrix3x3 = createButton.radioButtonTimesNewRoman16(" 3 ", true);
         RadioButton matrix4x4 = createButton.radioButtonTimesNewRoman16(" 4 ", false);
@@ -219,13 +218,43 @@ public class Board extends BorderPane {
 
         top.getChildren().add(signAsk);
 
+        RadioButton easy = createButton.radioButtonTimesNewRoman16(texts.easy(), true);
+        RadioButton middle = createButton.radioButtonTimesNewRoman16(texts.middle(), false);
+        //RadioButton difficult = createButton.radioButtonTimesNewRoman16(texts.difficult(), false);
+
+        easy.setToggleGroup(difficultyLevelGroup);
+        middle.setToggleGroup(difficultyLevelGroup);
+        //difficult.setToggleGroup(difficultyLevelGroup);
+
+        easy.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            this.difficulty = texts.easy();
+            this.game = new TicTacToeGame(matrixSize);
+            this.setCenter(createCentre(stage));
+        });
+
+        middle.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            this.difficulty = texts.middle();
+            this.game = new TicTacToeGame(matrixSize);
+            this.setCenter(createCentre(stage));
+        });
+
+        /*difficult.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            this.difficulty = texts.middle();
+            this.game = new TicTacToeGame(matrixSize);
+            this.setCenter(createCentre(stage));
+        });*/
+
+        difficultyLevel.getChildren().addAll(difficulty, easy, middle);//, difficult);
+
+        top.getChildren().add(difficultyLevel);
+
         return top;
     }
 
     private HBox createBottom(Stage stage) {
 
         HBox bottom = new HBox();
-        bottom.setBackground(backgroundTopOrBottom);
+        bottom.setBackground(backgroundView.getBackgroundTopOrBottom());
         bottom.setAlignment(Pos.CENTER);
         bottom.setPrefWidth(bottomHight);
         Button endGame = createButton.endGame();
@@ -238,6 +267,7 @@ public class Board extends BorderPane {
         playAgain.setOnAction((action) -> {
             this.game.cleanTab(matrixSize);
             this.setCenter(createCentre(stage));
+            System.out.println("Start new game");
         });
 
         bottom.getChildren().addAll(playAgain, endGame);
@@ -247,19 +277,17 @@ public class Board extends BorderPane {
 
     private Scene endGameWindow (Stage thisStage, Stage mainStage){
         VBox displayWinner = new VBox();
-        displayWinner.setBackground(backgroundTopOrBottom);
+        displayWinner.setBackground(backgroundView.getBackgroundTopOrBottom());
         displayWinner.setAlignment(Pos.CENTER);
         displayWinner.setPrefWidth(centreWidth);
-        //displayWinner.setPrefHeight(centreWidth);
+
         Text winner = displayTexts.textDisplayArial20(game.displayWinner(game, sign));
         Text whatIsNext = displayTexts.textDisplayArial20("What will you do next?");
 
         HBox buttonsDown = new HBox();
-        buttonsDown.setBackground(backgroundCentre);
         Button playAgain = createButton.playAgain();
         Button endGame = createButton.endGame();
         buttonsDown.setAlignment(Pos.CENTER);
-
 
         endGame.setOnAction((action) -> {
             thisStage.close();
@@ -269,6 +297,7 @@ public class Board extends BorderPane {
         playAgain.setOnAction((action) -> {
             this.game.cleanTab(matrixSize);
             this.setCenter(createCentre(mainStage));
+            System.out.println("Start new game");
             thisStage.close();
         });
 
@@ -278,5 +307,20 @@ public class Board extends BorderPane {
         Scene scene = new Scene(displayWinner);
 
         return scene;
+    }
+
+    public void displayEndingWindow(Stage stage){
+        if ('n' != winnerSign) {
+            winnerSign = 'n';
+            Stage newWindow = new Stage();
+            Scene newScene = endGameWindow(newWindow, stage);
+
+            newWindow.setScene(newScene);
+            newWindow.setTitle("Tic-Tac-Toe");
+            newWindow.centerOnScreen();
+            newWindow.show();
+
+            game.cleanTab(matrixSize);
+        }
     }
 }
