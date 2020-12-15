@@ -63,10 +63,7 @@ public class Texts {
     }
 
     public String clearStatisticText(){
-        String text = currentStatisticTitle()
-                + clearStatisticNumber()
-                + allStatisticTitle()
-                + clearStatisticNumber();
+        String text = allStatisticTitle() + clearStatisticNumber();
         return text;
     }
 

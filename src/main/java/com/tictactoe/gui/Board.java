@@ -16,7 +16,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Board extends BorderPane {
@@ -95,6 +95,8 @@ public class Board extends BorderPane {
             }
         }
 
+        AtomicInteger moveNumber = new AtomicInteger();
+
         for (int i = 0 ; i < matrixSize ; i++) {
             for (int j = 0 ; j < matrixSize ; j++) {
                 int finalI = i;
@@ -117,6 +119,10 @@ public class Board extends BorderPane {
                             buttonTab[finalI][finalJ].setBackground(
                                     displaySign.matrixChoice(sign, centreWidth, matrixSize));
                             game.addMove(sign, finalI, finalJ);
+                            if (moveNumber.get() == 0) {
+                                this.numberOfStartGames++;
+                                moveNumber.getAndIncrement();
+                            }
                             break;
                         }
                     } while (true);
@@ -288,7 +294,6 @@ public class Board extends BorderPane {
         });
 
         playAgain.setOnAction((action) -> {
-            this.numberOfStartGames++;
             this.game.cleanTab(matrixSize);
             this.setCenter(createCentre(stage));
             System.out.println("Start new game");
@@ -326,7 +331,6 @@ public class Board extends BorderPane {
             this.game.cleanTab(matrixSize);
             this.setCenter(createCentre(mainStage));
             System.out.println("Start new game");
-            this.numberOfStartGames++;
             thisStage.close();
         });
 
@@ -403,6 +407,11 @@ public class Board extends BorderPane {
         clearStatistic.setOnAction((action) -> {
             try {
                 file.createClearStatistic();
+                this.numberOfStartGames = 0;
+                this.numberOfEndGames = 0;
+                this.numberOfWinPlayer = 0;
+                this.numberOfWinComputer = 0;
+                this.numberOfDraws = 0;
             } catch (IOException exception) {
                 exception.printStackTrace();
             } finally {

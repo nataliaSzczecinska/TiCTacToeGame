@@ -180,7 +180,7 @@ public class ComputerPlayer implements Player {
                         if(tab[j][size - 1 - j] == ' ') {
                             coordinates.setRow(j);
                             coordinates.setColumn(size - 1 - j);
-                            System.out.println("The condition for anti diagonal is true");
+                            //System.out.println("The condition for anti diagonal is true");
                             return true;
                         }
                     }

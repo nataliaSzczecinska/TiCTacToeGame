@@ -34,7 +34,6 @@ public class FileService {
             for (String list : stringList){
                 System.out.println(list);
             }
-
             getAllValue(stringList);
 
         } catch (Exception exception) {
@@ -116,7 +115,7 @@ public class FileService {
                 case 1: {
                     //System.out.println("Get " + getValue(list.get(i)));
                     this.allNumberOfStartGames = getValue(list.get(i));
-                    System.out.println("Start value = " + allNumberOfStartGames);
+                    //System.out.println("Start value = " + allNumberOfStartGames);
                     break;
                 } case 2: {
                     this.allNumberOfEndGames = getValue(list.get(i));
