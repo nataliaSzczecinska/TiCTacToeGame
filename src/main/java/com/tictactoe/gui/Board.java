@@ -313,7 +313,6 @@ public class Board extends BorderPane {
         Text whatIsNext = displayTexts.textDisplayArial20(texts.whatNext());
 
         HBox buttonsDown = new HBox();
-        //Button showStatistic = createButton.statistic();
         Button playAgain = createButton.playAgain();
         Button endGame = createButton.endGame();
         buttonsDown.setAlignment(Pos.CENTER);
@@ -330,10 +329,6 @@ public class Board extends BorderPane {
             this.numberOfStartGames++;
             thisStage.close();
         });
-
-        /*showStatistic.setOnAction((action) -> {
-            displayStatistic();
-        });*/
 
         buttonsDown.getChildren().addAll(playAgain, endGame);
         displayWinner.getChildren().addAll(winner, whatIsNext, buttonsDown);
