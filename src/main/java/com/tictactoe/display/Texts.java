@@ -70,6 +70,10 @@ public class Texts {
         return text;
     }
 
+    public String clear(){
+        return "Clear";
+    }
+
     public String setGeneralStatistic(int allNumberOfWinPlayer, int allNumberOfWinComputer, int allNumberOfStartGames,
                                int allNumberOfEndGames, int allNumberOfDraws) {
         String text = allStatisticTitle();

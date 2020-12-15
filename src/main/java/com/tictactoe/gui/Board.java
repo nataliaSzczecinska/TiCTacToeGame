@@ -29,7 +29,7 @@ public class Board extends BorderPane {
     private int bottomHight = 200;
     private int numberOfWinPlayer = 0;
     private int numberOfWinComputer = 0;
-    private int numberOfStartGames = 1;
+    private int numberOfStartGames = 0;
     private int numberOfEndGames = 0;
     private int numberOfDraws = 0;
 
@@ -365,18 +365,18 @@ public class Board extends BorderPane {
         statisticWindow.initModality(Modality.WINDOW_MODAL);
         statisticWindow.initOwner(stage);
 
-        Scene statisticScene = displayStatisticWindow(statisticWindow);
+        Scene statisticScene = displayStatisticWindow(statisticWindow,stage);
 
         statisticWindow.setScene(statisticScene);
         statisticWindow.show();
     }
 
-    public Scene displayStatisticWindow(Stage stage){
-        Scene scene = new Scene(statisticLayout(stage));
+    public Scene displayStatisticWindow(Stage thisStage, Stage stage){
+        Scene scene = new Scene(statisticLayout(thisStage, stage));
         return scene;
     }
 
-    public VBox statisticLayout(Stage stage){
+    public VBox statisticLayout(Stage thisStage, Stage stage){
         VBox statisticVBox = new VBox();
         statisticVBox.setBackground(backgroundView.getBackgroundTopOrBottom());
         statisticVBox.setAlignment(Pos.CENTER);
@@ -399,13 +399,29 @@ public class Board extends BorderPane {
                         file.getAllNumberOfEndGames() + this.numberOfEndGames,
                         file.getAllNumberOfDraws() + this.numberOfDraws));
 
-        Button closeWindow = createButton.closeStatisticWindow();
+        HBox buttonPart = new HBox();
+        buttonPart.setAlignment(Pos.CENTER);
 
-        statisticVBox.getChildren().addAll(displayStatistic, closeWindow);
+        Button closeWindow = createButton.closeStatisticWindow();
+        Button clearStatistic = createButton.clearStatistic();
+
+        clearStatistic.setOnAction((action) -> {
+            try {
+                file.createClearStatistic();
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            } finally {
+                displayStatistic(stage);
+                thisStage.close();
+            }
+        });
 
         closeWindow.setOnAction((action) -> {
-            stage.close();
+            thisStage.close();
         });
+
+        buttonPart.getChildren().addAll(clearStatistic, closeWindow);
+        statisticVBox.getChildren().addAll(displayStatistic, buttonPart);
 
         return statisticVBox;
     }

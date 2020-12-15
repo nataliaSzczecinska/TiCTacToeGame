@@ -29,18 +29,7 @@ public class TicTacToeApplication extends Application{
 
     @Override
     public void init() throws Exception {
-        try {
-            file.fileReader();
-            allNumberOfStartGames = file.getAllNumberOfStartGames();
-            allNumberOfEndGames = file.getAllNumberOfEndGames();
-            allNumberOfWinPlayer = file.getAllNumberOfWinPlayer();
-            allNumberOfWinComputer = file.getAllNumberOfWinComputer();
-            allNumberOfDraws = file.getAllNumberOfDraws();
-        } catch (IOException exception) {
-            System.out.println(exception);
-        } finally {
-            System.out.println("The init was run");
-        }
+         //
     }
 
     @Override
@@ -67,6 +56,17 @@ public class TicTacToeApplication extends Application{
     public void stop() throws Exception {
         try {
             System.out.println("Start to save statistic...");
+
+            try {
+                file.fileReader();
+                allNumberOfStartGames = file.getAllNumberOfStartGames();
+                allNumberOfEndGames = file.getAllNumberOfEndGames();
+                allNumberOfWinPlayer = file.getAllNumberOfWinPlayer();
+                allNumberOfWinComputer = file.getAllNumberOfWinComputer();
+                allNumberOfDraws = file.getAllNumberOfDraws();
+            } catch (IOException exception) {
+                System.out.println(exception);
+            }
 
             System.out.println("numberOfWin = " + numberOfWinPlayer +
                     "\nnumberOfLost = " + numberOfWinComputer +
