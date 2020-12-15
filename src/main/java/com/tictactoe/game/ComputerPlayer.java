@@ -34,8 +34,8 @@ public class ComputerPlayer implements Player {
 
                 if (tab[coordinates.getRow()][coordinates.getColumn()] == ' ') {
                     tab[coordinates.getRow()][coordinates.getColumn()] = opponentSign;
-                    System.out.println("RandRow = " + coordinates.getRow() +
-                            " randCol = " + coordinates.getColumn());
+                    //System.out.println("RandRow = " + coordinates.getRow() +
+                            //" randCol = " + coordinates.getColumn());
                     return background;
                 }
             } while (true);
@@ -44,8 +44,8 @@ public class ComputerPlayer implements Player {
                     checkingRows(coordinates, tab, matrixSize) ||
                     checkingDiagonal(coordinates, tab, matrixSize) ||
                     checkingAntiDiagonal(coordinates, tab, matrixSize)) {
-                System.out.println("In middle there is true\nCordinates: +" +
-                        "row = " + coordinates.getRow() + " col = " + coordinates.getColumn());
+                //System.out.println("In middle there is true\nCordinates: +" +
+                        //"row = " + coordinates.getRow() + " col = " + coordinates.getColumn());
                 tab[coordinates.getRow()][coordinates.getColumn()] = opponentSign;
                 return background;
             } else {

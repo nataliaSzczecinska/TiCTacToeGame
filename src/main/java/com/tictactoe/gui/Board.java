@@ -2,16 +2,21 @@ package com.tictactoe.gui;
 
 import com.tictactoe.display.DisplayTexts;
 import com.tictactoe.display.Texts;
+import com.tictactoe.fileservice.FileService;
 import com.tictactoe.game.Coordinates;
 import com.tictactoe.game.TicTacToeGame;
 import com.tictactoe.buttons.CreateButton;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
+import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.*;
 
 
 public class Board extends BorderPane {
@@ -22,6 +27,11 @@ public class Board extends BorderPane {
     private char sign = 'X';
     private int centreWidth = 500;
     private int bottomHight = 200;
+    private int numberOfWinPlayer = 0;
+    private int numberOfWinComputer = 0;
+    private int numberOfStartGames = 1;
+    private int numberOfEndGames = 0;
+    private int numberOfDraws = 0;
 
     private Texts texts = new Texts();
     private DisplayTexts displayTexts = new DisplayTexts();
@@ -37,6 +47,26 @@ public class Board extends BorderPane {
         this.setCenter(createCentre(stage));
         this.setBottom(createBottom(stage));
         this.setTop(createTop(stage));
+    }
+
+    public int getNumberOfWinPlayer() {
+        return numberOfWinPlayer;
+    }
+
+    public int getNumberOfWinComputer() {
+        return numberOfWinComputer;
+    }
+
+    public int getNumberOfStartGames() {
+        return numberOfStartGames;
+    }
+
+    public int getNumberOfEndGames() {
+        return numberOfEndGames;
+    }
+
+    public int getNumberOfDraws() {
+        return numberOfDraws;
     }
 
     public int getCentreWidth() {
@@ -93,17 +123,8 @@ public class Board extends BorderPane {
 
                     winnerSign = game.whoWin();
                     if ('n' != winnerSign) {
-                        winnerSign = 'n';
-
-                        Stage newWindow = new Stage();
-                        Scene newScene = endGameWindow(newWindow, stage);
-
-                        newWindow.setScene(newScene);
-                        newWindow.setTitle("Tic-Tac-Toe");
-                        newWindow.centerOnScreen();
-                        newWindow.show();
-
-                        game.cleanTab(matrixSize);
+                        setStatisticOfGame();
+                        displayEndingWindow(stage);
                     } else {
                         do {
                             System.out.println("Computer move");
@@ -111,22 +132,23 @@ public class Board extends BorderPane {
                             Background computerBackgroundPlace =
                                     game.computerMove(sign, centreWidth, matrixSize,
                                             coordinates, difficulty);
-                            System.out.println("ComputerRow = " + coordinates.getRow() +
-                                    " computerColumn = " + coordinates.getColumn());
+                            //System.out.println("ComputerRow = " + coordinates.getRow() +
+                                    //" computerColumn = " + coordinates.getColumn());
                             if (buttonTab[coordinates.getRow()][coordinates.getColumn()].equals(backgroundX)
                                 || buttonTab[coordinates.getRow()][coordinates.getColumn()].equals(backgroundO)) {
-                                System.out.println("In Board. Incorrect move! This area has chosen before.");
+                                //System.out.println("In Board. Incorrect move! This area has chosen before.");
                                 continue;
                             } else {
                                 buttonTab[coordinates.getRow()][coordinates.getColumn()]
                                         .setBackground(computerBackgroundPlace);
-                                game.displayGameTable();
+                                //game.displayGameTable();
                                 break;
                             }
                         } while (true);
                     }
 
                     winnerSign = game.whoWin();
+                    setStatisticOfGame();
                     displayEndingWindow(stage);
                 });
             }
@@ -257,6 +279,7 @@ public class Board extends BorderPane {
         bottom.setBackground(backgroundView.getBackgroundTopOrBottom());
         bottom.setAlignment(Pos.CENTER);
         bottom.setPrefWidth(bottomHight);
+        Button statistic = createButton.statistic();
         Button endGame = createButton.endGame();
         Button playAgain = createButton.playAgain();
 
@@ -265,12 +288,17 @@ public class Board extends BorderPane {
         });
 
         playAgain.setOnAction((action) -> {
+            this.numberOfStartGames++;
             this.game.cleanTab(matrixSize);
             this.setCenter(createCentre(stage));
             System.out.println("Start new game");
         });
 
-        bottom.getChildren().addAll(playAgain, endGame);
+        statistic.setOnAction((action) -> {
+            displayStatistic(stage);
+        });
+
+        bottom.getChildren().addAll(statistic, playAgain, endGame);
 
         return bottom;
     }
@@ -282,9 +310,10 @@ public class Board extends BorderPane {
         displayWinner.setPrefWidth(centreWidth);
 
         Text winner = displayTexts.textDisplayArial20(game.displayWinner(game, sign));
-        Text whatIsNext = displayTexts.textDisplayArial20("What will you do next?");
+        Text whatIsNext = displayTexts.textDisplayArial20(texts.whatNext());
 
         HBox buttonsDown = new HBox();
+        //Button showStatistic = createButton.statistic();
         Button playAgain = createButton.playAgain();
         Button endGame = createButton.endGame();
         buttonsDown.setAlignment(Pos.CENTER);
@@ -298,8 +327,13 @@ public class Board extends BorderPane {
             this.game.cleanTab(matrixSize);
             this.setCenter(createCentre(mainStage));
             System.out.println("Start new game");
+            this.numberOfStartGames++;
             thisStage.close();
         });
+
+        /*showStatistic.setOnAction((action) -> {
+            displayStatistic();
+        });*/
 
         buttonsDown.getChildren().addAll(playAgain, endGame);
         displayWinner.getChildren().addAll(winner, whatIsNext, buttonsDown);
@@ -313,6 +347,8 @@ public class Board extends BorderPane {
         if ('n' != winnerSign) {
             winnerSign = 'n';
             Stage newWindow = new Stage();
+            newWindow.initModality(Modality.WINDOW_MODAL);
+            newWindow.initOwner(stage);
             Scene newScene = endGameWindow(newWindow, stage);
 
             newWindow.setScene(newScene);
@@ -321,6 +357,73 @@ public class Board extends BorderPane {
             newWindow.show();
 
             game.cleanTab(matrixSize);
+        }
+    }
+
+    public void displayStatistic(Stage stage){
+        Stage statisticWindow = new Stage();
+        statisticWindow.initModality(Modality.WINDOW_MODAL);
+        statisticWindow.initOwner(stage);
+
+        Scene statisticScene = displayStatisticWindow(statisticWindow);
+
+        statisticWindow.setScene(statisticScene);
+        statisticWindow.show();
+    }
+
+    public Scene displayStatisticWindow(Stage stage){
+        Scene scene = new Scene(statisticLayout(stage));
+        return scene;
+    }
+
+    public VBox statisticLayout(Stage stage){
+        VBox statisticVBox = new VBox();
+        statisticVBox.setBackground(backgroundView.getBackgroundTopOrBottom());
+        statisticVBox.setAlignment(Pos.CENTER);
+        statisticVBox.setPrefWidth(centreWidth);
+        FileService file = new FileService();
+
+        try {
+            file.fileReader();
+        } catch (IOException exception) {
+            System.out.println(exception);
+        } finally {
+            System.out.println("Read statistic");
+        }
+        Text displayStatistic = displayTexts.textDisplayTimesNewRoman16(
+                texts.setAllStatistic(this.numberOfWinPlayer, this.numberOfWinComputer,
+                        this.numberOfStartGames, this.numberOfEndGames, this.numberOfDraws,
+                        file.getAllNumberOfWinPlayer() + this.numberOfWinPlayer,
+                        file.getAllNumberOfWinComputer() + this.numberOfWinComputer,
+                        file.getAllNumberOfStartGames() + this.numberOfStartGames,
+                        file.getAllNumberOfEndGames() + this.numberOfEndGames,
+                        file.getAllNumberOfDraws() + this.numberOfDraws));
+
+        Button closeWindow = createButton.closeStatisticWindow();
+
+        statisticVBox.getChildren().addAll(displayStatistic, closeWindow);
+
+        closeWindow.setOnAction((action) -> {
+            stage.close();
+        });
+
+        return statisticVBox;
+    }
+
+    private void setStatisticOfGame(){
+        if ('n' != winnerSign) {
+            this.numberOfEndGames++;
+            System.out.println("Current endGames = " + numberOfEndGames);
+            if ('d' == winnerSign) {
+                this.numberOfDraws++;
+                System.out.println("Current draws = " + numberOfDraws);
+            } else if (sign == winnerSign) {
+                this.numberOfWinPlayer++;
+                System.out.println("Current won = " + numberOfWinPlayer);
+            } else {
+                this.numberOfWinComputer++;
+                System.out.println("Current lost = " + numberOfWinComputer);
+            }
         }
     }
 }

@@ -39,6 +39,28 @@ public class CreateButton {
         return button;
     }
 
+    public Button statistic() {
+        Button button = new Button (display.statistic());
+
+        button.setFont(Font.font("Times New Roman", 16));
+        button.setPrefHeight(50);
+        button.setBackground(bottomButton());
+        button.setOpaqueInsets(new Insets(10, 10, 10, 10));
+
+        return button;
+    }
+
+    public Button closeStatisticWindow() {
+        Button button = new Button (display.close());
+
+        button.setFont(Font.font("Times New Roman", 16));
+        button.setPrefHeight(50);
+        button.setBackground(bottomButton());
+        button.setOpaqueInsets(new Insets(10, 10, 10, 10));
+
+        return button;
+    }
+
     public Button matrixElement(double dimension, int matrixSize) {
         Button button = new Button();
         double signSize = signDimension(dimension, matrixSize);

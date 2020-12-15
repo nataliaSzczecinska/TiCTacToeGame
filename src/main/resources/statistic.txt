@@ -1,0 +1,12 @@
+Current game statistic:
+Number of started games: 0
+Number of completed games: 0
+Number of games won: 0
+Number of games lost: 0
+Number of draws: 0
+All games statistic:
+Number of started games: 0
+Number of completed games: 0
+Number of games won: 0
+Number of games lost: 0
+Number of draws: 0s
