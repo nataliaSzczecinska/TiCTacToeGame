@@ -28,11 +28,6 @@ public class TicTacToeApplication extends Application{
     }
 
     @Override
-    public void init() throws Exception {
-         //
-    }
-
-    @Override
     public void start(Stage stage) throws Exception {
         try {
             board = new Board(stage);
@@ -81,11 +76,11 @@ public class TicTacToeApplication extends Application{
                     "\nends = " + allNumberOfEndGames);
             System.out.println();
 
-            numberOfWinPlayer = board.getNumberOfWinPlayer();
-            numberOfWinComputer = board.getNumberOfWinComputer();
-            numberOfStartGames = board.getNumberOfStartGames();
-            numberOfEndGames = board.getNumberOfEndGames();
-            numberOfDraws = board.getNumberOfDraws();
+            numberOfWinPlayer = board.getMove().getWinGame();
+            numberOfWinComputer = board.getMove().getLoseGame();
+            numberOfStartGames = board.getMove().getStartGame();
+            numberOfEndGames = board.getMove().getEndGame();
+            numberOfDraws = board.getMove().getDrawGame();
             allNumberOfWinPlayer += numberOfWinPlayer;
             allNumberOfWinComputer += numberOfWinComputer;
             allNumberOfStartGames += numberOfStartGames;

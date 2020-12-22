@@ -5,8 +5,8 @@ import javafx.scene.layout.*;
 
 public class Sign {
 
-    private Image imageO = new Image("file:src/main/resources/OArea.jpg");
-    private Image imageX = new Image("file:src/main/resources/XArea.jpg");
+    private final Image imageO = new Image("file:src/main/resources/OArea.jpg");
+    private final Image imageX = new Image("file:src/main/resources/XArea.jpg");
 
     public Background matrixChoice(char sign, double dimension, int matrixSize) {
         double signSize =  0.95 * dimension / matrixSize;
@@ -18,7 +18,7 @@ public class Sign {
                 true);
         BackgroundImage backgroundImage;
 
-        if (sign == 'X') {
+        if ('X' == sign) {
             backgroundImage = new BackgroundImage(imageX,
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundRepeat.NO_REPEAT,

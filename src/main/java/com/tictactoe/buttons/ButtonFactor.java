@@ -1,6 +1,6 @@
 package com.tictactoe.buttons;
 
-import com.tictactoe.display.DisplayTexts;
+import com.tictactoe.display.TextFactor;
 import com.tictactoe.display.Texts;
 import com.tictactoe.gui.Sign;
 import javafx.geometry.Insets;
@@ -11,11 +11,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class CreateButton {
+public class ButtonFactor {
     private Texts display = new Texts();
-    private DisplayTexts displayTexts = new DisplayTexts();
     private Image imageEmpty = new Image("file:src/main/resources/emptyArea.jpg");
-    private Sign sign = new Sign();
+
 
     public Button endGame() {
         Button button = new Button (display.endGame());

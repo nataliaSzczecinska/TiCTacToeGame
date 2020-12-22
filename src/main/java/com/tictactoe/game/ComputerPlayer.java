@@ -11,48 +11,43 @@ public class ComputerPlayer implements Player {
     private Texts texts = new Texts();
 
     @Override
-    public Background getMove(char sign, char[][] tab,
+    public void getMove(char sign, char[][] tab,
                               double dimension, int matrixSize,
                               Coordinates coordinates, String difficultyLevel) {
 
         char opponentSign = sign;
 
-        if (sign == 'X') {
+        System.out.println("I am in getMove method in ComputerPlayerClass");
+
+        if ('X' == sign) {
             opponentSign = 'O';
-        } else if (sign == 'O') {
+        } else if ('O' == sign) {
             opponentSign = 'X';
         } else {
-            System.out.println("Wrong given sign.\nOpponent sign = sign");
+            System.out.println("Wrong given sign.\nOpponent sign = given sign");
         }
 
-        Background background = displaySign.matrixChoice(opponentSign, dimension, matrixSize);
-
-        if (difficultyLevel.equals(texts.easy())) {
+        if (texts.easy().equals(difficultyLevel)) {
             do {
                 coordinates.setColumn(generateValue.nextInt(matrixSize));
                 coordinates.setRow(generateValue.nextInt(matrixSize));
 
-                if (tab[coordinates.getRow()][coordinates.getColumn()] == ' ') {
+                if (' ' == tab[coordinates.getRow()][coordinates.getColumn()]) {
                     tab[coordinates.getRow()][coordinates.getColumn()] = opponentSign;
-                    //System.out.println("RandRow = " + coordinates.getRow() +
-                            //" randCol = " + coordinates.getColumn());
-                    return background;
+                    break;
                 }
             } while (true);
-        } else if (difficultyLevel.equals(texts.middle())) {
+        } else if (texts.middle().equals(difficultyLevel)) {
             if (checkingColumns(coordinates, tab, matrixSize) ||
                     checkingRows(coordinates, tab, matrixSize) ||
                     checkingDiagonal(coordinates, tab, matrixSize) ||
                     checkingAntiDiagonal(coordinates, tab, matrixSize)) {
-                //System.out.println("In middle there is true\nCordinates: +" +
-                        //"row = " + coordinates.getRow() + " col = " + coordinates.getColumn());
                 tab[coordinates.getRow()][coordinates.getColumn()] = opponentSign;
-                return background;
             } else {
-                return getMove(sign, tab, dimension, matrixSize, coordinates, texts.easy());
+                getMove(sign, tab, dimension, matrixSize, coordinates, texts.easy());
             }
         } else {
-            return getMove(sign, tab, dimension, matrixSize, coordinates, texts.middle());
+            getMove(sign, tab, dimension, matrixSize, coordinates, texts.middle());
         }
     }
 

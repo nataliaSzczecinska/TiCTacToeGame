@@ -7,7 +7,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import java.util.*;
 
-public class DisplayTexts {
+public class TextFactor {
     private ColorPicker colorPicker = new ColorPicker();
 
     public Text textDisplayArial20WithUnderline(String text){

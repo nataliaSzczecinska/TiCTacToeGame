@@ -1,6 +1,6 @@
 All games statistic:
-Number of started games: 15
-Number of completed games: 15
-Number of games won: 6
-Number of games lost: 3
-Number of draws: 6
+Number of started games: 19
+Number of completed games: 19
+Number of games won: 15
+Number of games lost: 1
+Number of draws: 3

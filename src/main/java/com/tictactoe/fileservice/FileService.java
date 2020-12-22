@@ -42,26 +42,6 @@ public class FileService {
         }
     }
 
-    public int getAllNumberOfWinPlayer() {
-        return allNumberOfWinPlayer;
-    }
-
-    public int getAllNumberOfWinComputer() {
-        return allNumberOfWinComputer;
-    }
-
-    public int getAllNumberOfStartGames() {
-        return allNumberOfStartGames;
-    }
-
-    public int getAllNumberOfEndGames() {
-        return allNumberOfEndGames;
-    }
-
-    public int getAllNumberOfDraws() {
-        return allNumberOfDraws;
-    }
-
     public void createClearStatistic() throws IOException {
         FileWriter writeStatisticFile = new FileWriter(file.getName());
         try {
@@ -139,4 +119,25 @@ public class FileService {
             }
         }
     }
+
+    public int getAllNumberOfWinPlayer() {
+        return allNumberOfWinPlayer;
+    }
+
+    public int getAllNumberOfWinComputer() {
+        return allNumberOfWinComputer;
+    }
+
+    public int getAllNumberOfStartGames() {
+        return allNumberOfStartGames;
+    }
+
+    public int getAllNumberOfEndGames() {
+        return allNumberOfEndGames;
+    }
+
+    public int getAllNumberOfDraws() {
+        return allNumberOfDraws;
+    }
+
 }

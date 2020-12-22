@@ -3,7 +3,15 @@ package com.tictactoe.game;
 public class Coordinates {
     private int row;
     private int column;
-    private char value;
+
+    public Coordinates(){
+        //
+    }
+    
+    public Coordinates(int row, int column) {
+        this.row = row;
+        this.column = column;
+    }
 
     public int getRow() {
         return row;
@@ -21,11 +29,4 @@ public class Coordinates {
         this.column = column;
     }
 
-    public char getValue() {
-        return value;
-    }
-
-    public void setValue(char value) {
-        this.value = value;
-    }
 }
