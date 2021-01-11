@@ -5,7 +5,6 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import java.util.*;
 
 public class TextFactor {
     private ColorPicker colorPicker = new ColorPicker();
@@ -40,9 +39,5 @@ public class TextFactor {
         displayText.setText(text);
 
         return displayText;
-    }
-
-    public List<Text> statisticText(){
-        return null;
     }
 }

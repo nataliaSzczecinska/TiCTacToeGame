@@ -6,15 +6,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Scanner;
 import java.util.*;
+import java.util.logging.Logger;
+import java.util.logging.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FileService {
 
+    protected final Logger log = Logger.getLogger(getClass().getName());
     private final Texts texts = new Texts();
     private final File file = new File("statistic.txt");
     private int allNumberOfWinPlayer = 0;
@@ -24,20 +25,20 @@ public class FileService {
     private int allNumberOfDraws = 0;
 
     public void fileReader() throws IOException {
-        //ClassLoader classLoader = getClass().getClassLoader();
-
         try {
             Stream<String> fileLines = Files.lines(Path.of(file.getPath()));
             List<String> stringList = fileLines.collect(Collectors.toList());
 
-            System.out.println("File is stard to read...");
+
+            log.log(Level.INFO, "The reading file is started...");
             for (String list : stringList){
-                System.out.println(list);
+                log.info(list);
             }
             getAllValue(stringList);
+            fileLines.close();
 
         } catch (Exception exception) {
-            System.out.println("There is an error! The file cannot be read");
+            log.warning("There is an error! The file cannot be read");
             createClearStatistic();
         }
     }
@@ -48,7 +49,7 @@ public class FileService {
             String clearStatisticText = texts.clearStatisticText();
             writeStatisticFile.write(clearStatisticText);
         } catch (Exception exception) {
-            System.out.println(exception);
+            log.warning("There is an error! " + exception);
         } finally {
             writeStatisticFile.close();
         }
@@ -64,7 +65,7 @@ public class FileService {
                     allNumberOfStartGames, allNumberOfEndGames, allNumberOfDraws);
             writeStatisticFile.write(statisticText);
         } catch (IOException exception) {
-            System.out.println(exception);
+            log.warning("There is an error! " + exception);
         } finally {
             writeStatisticFile.close();
         }
@@ -81,7 +82,6 @@ public class FileService {
             if (sign >= '0' && sign <= '9') {
                 value += ((int) sign - 48) * temp;
                 temp *= 10;
-                //System.out.println("Char = " + sign + " value = " + value);
             }
         }
         return value;
@@ -92,30 +92,23 @@ public class FileService {
 
         for (int i = 1 ; i < listLength ; i++) {
             switch (i) {
-                case 1: {
-                    //System.out.println("Get " + getValue(list.get(i)));
+                case 1:
                     this.allNumberOfStartGames = getValue(list.get(i));
-                    //System.out.println("Start value = " + allNumberOfStartGames);
                     break;
-                } case 2: {
+                case 2:
                     this.allNumberOfEndGames = getValue(list.get(i));
-                    //System.out.println("End value = " + allNumberOfEndGames);
                     break;
-                } case 3: {
+                case 3:
                     this.allNumberOfWinPlayer = getValue(list.get(i));
-                    //System.out.println("Win value = " + allNumberOfWinPlayer);
                     break;
-                } case 4: {
+                case 4:
                     this.allNumberOfWinComputer = getValue(list.get(i));
-                    //System.out.println("Lost value = " + allNumberOfWinComputer);
                     break;
-                } case 5: {
+                case 5:
                     this.allNumberOfDraws = getValue(list.get(i));
-                    //System.out.println("Draw value = " + allNumberOfDraws);
                     break;
-                } default: {
-                    System.out.println("Wrong file!");
-                }
+                default:
+                    log.warning("Wrong file!");
             }
         }
     }

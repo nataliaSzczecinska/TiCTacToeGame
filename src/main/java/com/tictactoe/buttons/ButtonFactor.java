@@ -1,8 +1,6 @@
 package com.tictactoe.buttons;
 
-import com.tictactoe.display.TextFactor;
 import com.tictactoe.display.Texts;
-import com.tictactoe.gui.Sign;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -14,12 +12,12 @@ import javafx.scene.text.Font;
 public class ButtonFactor {
     private Texts display = new Texts();
     private Image imageEmpty = new Image("file:src/main/resources/emptyArea.jpg");
-
+    private static Font fontType = Font.font("Times New Roman", 16);
 
     public Button endGame() {
         Button button = new Button (display.endGame());
 
-        button.setFont(Font.font("Times New Roman", 16));
+        button.setFont(fontType);
         button.setPrefHeight(50);
         button.setBackground(bottomButton());
         button.setOpaqueInsets(new Insets(10, 10, 10, 10));
@@ -30,7 +28,7 @@ public class ButtonFactor {
     public Button playAgain() {
         Button button = new Button (display.playAgain());
 
-        button.setFont(Font.font("Times New Roman", 16));
+        button.setFont(fontType);
         button.setPrefHeight(50);
         button.setBackground(bottomButton());
         button.setOpaqueInsets(new Insets(10, 10, 10, 10));
@@ -41,7 +39,7 @@ public class ButtonFactor {
     public Button statistic() {
         Button button = new Button (display.statistic());
 
-        button.setFont(Font.font("Times New Roman", 16));
+        button.setFont(fontType);
         button.setPrefHeight(50);
         button.setBackground(bottomButton());
         button.setOpaqueInsets(new Insets(10, 10, 10, 10));
@@ -52,7 +50,7 @@ public class ButtonFactor {
     public Button clearStatistic() {
         Button button = new Button (display.clear());
 
-        button.setFont(Font.font("Times New Roman", 16));
+        button.setFont(fontType);
         button.setPrefHeight(50);
         button.setBackground(bottomButton());
         button.setOpaqueInsets(new Insets(10, 10, 10, 10));
@@ -63,7 +61,7 @@ public class ButtonFactor {
     public Button closeStatisticWindow() {
         Button button = new Button (display.close());
 
-        button.setFont(Font.font("Times New Roman", 16));
+        button.setFont(fontType);
         button.setPrefHeight(50);
         button.setBackground(bottomButton());
         button.setOpaqueInsets(new Insets(10, 10, 10, 10));
@@ -120,9 +118,8 @@ public class ButtonFactor {
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
                 backgroundSize);
-        Background background = new Background(backgroundImageButton);
 
-        return background;
+        return new Background(backgroundImageButton);
     }
 
     public double signDimension(double dimension, int matrixSize) {
@@ -141,8 +138,6 @@ public class ButtonFactor {
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
                 backgroundSize);
-        Background backgroundButton = new Background(backgroundImageButton);
-
-        return backgroundButton;
+        return new Background(backgroundImageButton);
     }
 }

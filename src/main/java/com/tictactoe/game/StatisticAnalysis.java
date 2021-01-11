@@ -1,6 +1,10 @@
 package com.tictactoe.game;
 
+import java.util.logging.Logger;
+
 public class StatisticAnalysis {
+    protected final Logger log = Logger.getLogger(getClass().getName());
+
     private boolean playerMove;
     private int numberOfMove;
     private int startGame;
@@ -19,19 +23,29 @@ public class StatisticAnalysis {
         this.drawGame = 0;
     }
 
-    public void setStatisticOfGame(char playerSign, char winnerSign){
+    public void setStatisticOfGame(char playerSign, char winnerSign) {
+
         if ('n' != winnerSign) {
             this.endGame++;
-            System.out.println("Current endGames = " + endGame);
-            if ('d' == winnerSign) {
-                this.drawGame++;
-                System.out.println("Current draws = " + drawGame);
-            } else if (playerSign == winnerSign) {
-                this.winGame++;
-                System.out.println("Current won = " + winGame);
-            } else {
-                this.loseGame++;
-                System.out.println("Current lost = " + loseGame);
+            log.info("Current endGames = " + endGame);
+            switch (winnerSign) {
+                case 'd': {
+                    this.drawGame++;
+                    log.info("Current draws = " + drawGame);
+                    break;
+                } case 'X': {
+                    if ('X' == playerSign) {
+                        this.winGame++;
+                        log.info("Current won = " + winGame);
+                    } else {
+                        this.loseGame++;
+                        log.info("Current lost = " + loseGame);
+                    }
+                    break;
+                }
+                default: {
+                    log.warning("There is an error! Wrong wining sign!");
+                }
             }
         }
     }

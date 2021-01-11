@@ -17,24 +17,22 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 
 public class Board extends BorderPane {
 
-    private final int centreWidth = 500;
-    private final int bottomHight = 200;
+    private static final int CENTRE_WIDTH = 500;
+    private static final int BOTTOM_HIGHT = 200;
     private final Texts texts = new Texts();
     private final TextFactor textFactor = new TextFactor();
-    private final Sign displaySign = new Sign();
+    protected final Logger log = Logger.getLogger(getClass().getName());
 
     private int matrixSize = 3;
 
-    private final static BackgroundView backgroundView = new BackgroundView();
-    private final Background backgroundX = displaySign.matrixChoice('X', centreWidth, matrixSize);
-    private final Background backgroundO = displaySign.matrixChoice('O', centreWidth, matrixSize);
+    private static  final BackgroundView backgroundView = new BackgroundView();
 
     private static StatisticAnalysis move = new StatisticAnalysis();
-    private char winnerSign = 'n';
     private char sign = 'X';
 
     private ButtonFactor buttonFactor = new ButtonFactor();
@@ -50,7 +48,7 @@ public class Board extends BorderPane {
 
     private GridPane createCentre(Stage stage) {
         GridPane grid = new GridPane();
-        double signSize = (0.8 * centreWidth) / matrixSize;
+        double signSize = (0.8 * CENTRE_WIDTH) / matrixSize;
         move.setNumberOfMove(0);
         move.setPlayerMove(true);
 
@@ -59,7 +57,7 @@ public class Board extends BorderPane {
         grid.setHgap(0.1 * signSize);
         grid.setVgap(0.1 * signSize);
 
-        Button [][] buttonTab = buttonFactor.matrixButton(centreWidth, matrixSize);
+        Button [][] buttonTab = buttonFactor.matrixButton(CENTRE_WIDTH, matrixSize);
 
         for (int i = 0 ; i < matrixSize ; i++) {
             for (int j = 0 ; j < matrixSize ; j++) {
@@ -70,20 +68,18 @@ public class Board extends BorderPane {
         for (int i = 0 ; i < matrixSize ; i++) {
             for (int j = 0 ; j < matrixSize ; j++) {
                 Coordinates coordinates = new Coordinates(i, j);
-                buttonTab[i][j].setOnAction((action) -> {
+                buttonTab[i][j].setOnAction(action -> {
                     do {
                         //Real Player Move
-                        //System.out.println("Player move");
-                        game.playerMove(sign, centreWidth, matrixSize, coordinates, move,
+                        game.playerMove(sign, CENTRE_WIDTH, matrixSize, coordinates, move,
                                 buttonTab);
-                        //Checking if the game is end now
-                        displayEndingWindow(game.whoWin(), stage);
                     } while (move.isPlayerMove());
-                    //Computer Player Move
-                    //System.out.println("Computer move");
-                    game.computerMove(sign, centreWidth, matrixSize,
-                            coordinates, difficulty, buttonTab, move);
-                    //Checking if the game is end now
+                    log.info("The realPlayer move is end");
+                    if (!isGameEnd()) {
+                        log.info("The computerPlayer move...");
+                        game.computerMove(sign, CENTRE_WIDTH, matrixSize,
+                                coordinates, difficulty, buttonTab, move);
+                    }
                     displayEndingWindow(game.whoWin(), stage);
                 });
             }
@@ -115,7 +111,7 @@ public class Board extends BorderPane {
 
         Text howManyPlaces = textFactor.textDisplayTimesNewRoman16(texts.askMatrixSize());
         Text whatSign = textFactor.textDisplayTimesNewRoman16(texts.whatSign());
-        Text difficulty = textFactor.textDisplayTimesNewRoman16(texts.difficultyLevel());
+        Text difficultyChoice = textFactor.textDisplayTimesNewRoman16(texts.difficultyLevel());
 
         ToggleGroup matrixButtons = new ToggleGroup();
         ToggleGroup signChoice = new ToggleGroup();
@@ -177,11 +173,9 @@ public class Board extends BorderPane {
 
         RadioButton easy = buttonFactor.radioButtonTimesNewRoman16(texts.easy(), true);
         RadioButton middle = buttonFactor.radioButtonTimesNewRoman16(texts.middle(), false);
-        //RadioButton difficult = createButton.radioButtonTimesNewRoman16(texts.difficult(), false);
 
         easy.setToggleGroup(difficultyLevelGroup);
         middle.setToggleGroup(difficultyLevelGroup);
-        //difficult.setToggleGroup(difficultyLevelGroup);
 
         easy.selectedProperty().addListener((observable, oldValue, newValue) -> {
             this.difficulty = texts.easy();
@@ -195,13 +189,7 @@ public class Board extends BorderPane {
             this.setCenter(createCentre(stage));
         });
 
-        /*difficult.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            this.difficulty = texts.middle();
-            this.game = new TicTacToeGame(matrixSize);
-            this.setCenter(createCentre(stage));
-        });*/
-
-        difficultyLevel.getChildren().addAll(difficulty, easy, middle);//, difficult);
+        difficultyLevel.getChildren().addAll(difficultyChoice, easy, middle);
 
         top.getChildren().add(difficultyLevel);
 
@@ -213,24 +201,20 @@ public class Board extends BorderPane {
         HBox bottom = new HBox();
         bottom.setBackground(backgroundView.getBackgroundTopOrBottom());
         bottom.setAlignment(Pos.CENTER);
-        bottom.setPrefWidth(bottomHight);
+        bottom.setPrefWidth(BOTTOM_HIGHT);
         Button statistic = buttonFactor.statistic();
         Button endGame = buttonFactor.endGame();
         Button playAgain = buttonFactor.playAgain();
 
-        endGame.setOnAction((action) -> {
-            stage.close();
-        });
+        endGame.setOnAction(action -> stage.close());
 
-        playAgain.setOnAction((action) -> {
+        playAgain.setOnAction(action -> {
             this.game.cleanTab(matrixSize);
             this.setCenter(createCentre(stage));
-            System.out.println("Start new game");
+            log.info("Start new game");
         });
 
-        statistic.setOnAction((action) -> {
-            displayStatistic(stage);
-        });
+        statistic.setOnAction(action -> displayStatistic(stage));
 
         bottom.getChildren().addAll(statistic, playAgain, endGame);
 
@@ -241,7 +225,7 @@ public class Board extends BorderPane {
         VBox displayWinner = new VBox();
         displayWinner.setBackground(backgroundView.getBackgroundTopOrBottom());
         displayWinner.setAlignment(Pos.CENTER);
-        displayWinner.setPrefWidth(centreWidth);
+        displayWinner.setPrefWidth(CENTRE_WIDTH);
 
         Text winner = textFactor.textDisplayArial20(game.displayWinner(game, sign));
         Text whatIsNext = textFactor.textDisplayArial20(texts.whatNext());
@@ -251,24 +235,22 @@ public class Board extends BorderPane {
         Button endGame = buttonFactor.endGame();
         buttonsDown.setAlignment(Pos.CENTER);
 
-        endGame.setOnAction((action) -> {
+        endGame.setOnAction(action -> {
             thisStage.close();
             mainStage.close();
         });
 
-        playAgain.setOnAction((action) -> {
+        playAgain.setOnAction(action -> {
             this.game.cleanTab(matrixSize);
             this.setCenter(createCentre(mainStage));
-            System.out.println("Start new game");
+            log.info("Start new game");
             thisStage.close();
         });
 
         buttonsDown.getChildren().addAll(playAgain, endGame);
         displayWinner.getChildren().addAll(winner, whatIsNext, buttonsDown);
 
-        Scene scene = new Scene(displayWinner);
-
-        return scene;
+        return new Scene(displayWinner);
     }
 
     public void displayEndingWindow(char winnerSign, Stage stage){
@@ -299,30 +281,29 @@ public class Board extends BorderPane {
     }
 
     public Scene displayStatisticWindow(Stage thisStage, Stage stage){
-        Scene scene = new Scene(statisticLayout(thisStage, stage));
-        return scene;
+        return new Scene(statisticLayout(thisStage, stage));
     }
 
     public VBox statisticLayout(Stage thisStage, Stage stage){
         VBox statisticVBox = new VBox();
         statisticVBox.setBackground(backgroundView.getBackgroundTopOrBottom());
         statisticVBox.setAlignment(Pos.CENTER);
-        statisticVBox.setPrefWidth(centreWidth);
+        statisticVBox.setPrefWidth(CENTRE_WIDTH);
         FileService file = new FileService();
 
         try {
             file.fileReader();
         } catch (IOException exception) {
-            System.out.println(exception);
+            log.warning("There is an exception: " + exception);
         } finally {
-            System.out.println("Read statistic");
+            log.info("Read statistic");
         }
         Text displayStatistic = textFactor.textDisplayTimesNewRoman16(
                 texts.setAllStatistic(move.getWinGame(), move.getLoseGame(),
                         move.getStartGame(), move.getEndGame(), move.getDrawGame(),
                         file.getAllNumberOfWinPlayer() + move.getWinGame(),
                         file.getAllNumberOfWinComputer() + move.getLoseGame(),
-                        file.getAllNumberOfStartGames() + this.move.getStartGame(),
+                        file.getAllNumberOfStartGames() + move.getStartGame(),
                         file.getAllNumberOfEndGames() + move.getEndGame(),
                         file.getAllNumberOfDraws() + move.getDrawGame()));
 
@@ -332,7 +313,7 @@ public class Board extends BorderPane {
         Button closeWindow = buttonFactor.closeStatisticWindow();
         Button clearStatistic = buttonFactor.clearStatistic();
 
-        clearStatistic.setOnAction((action) -> {
+        clearStatistic.setOnAction(action -> {
             try {
                 file.createClearStatistic();
                 move.setDrawGame(0);
@@ -349,9 +330,7 @@ public class Board extends BorderPane {
             }
         });
 
-        closeWindow.setOnAction((action) -> {
-            thisStage.close();
-        });
+        closeWindow.setOnAction(action -> thisStage.close());
 
         buttonPart.getChildren().addAll(clearStatistic, closeWindow);
         statisticVBox.getChildren().addAll(displayStatistic, buttonPart);
@@ -359,15 +338,19 @@ public class Board extends BorderPane {
         return statisticVBox;
     }
 
+    private boolean isGameEnd() {
+        return ('n' != game.whoWin());
+    }
+
     public static StatisticAnalysis getMove() {
         return move;
     }
 
     public int getCentreWidth() {
-        return centreWidth;
+        return CENTRE_WIDTH;
     }
 
     public int getBottomHight() {
-        return bottomHight;
+        return BOTTOM_HIGHT;
     }
 }

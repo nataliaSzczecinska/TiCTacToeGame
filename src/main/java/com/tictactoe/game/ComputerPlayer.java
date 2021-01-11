@@ -1,14 +1,16 @@
 package com.tictactoe.game;
 
 import com.tictactoe.display.Texts;
-import com.tictactoe.gui.Sign;
-import javafx.scene.layout.Background;
 import java.util.Random;
+import java.util.logging.Logger;
 
 public class ComputerPlayer implements Player {
-    private Sign displaySign = new Sign();
     private Random generateValue = new Random();
     private Texts texts = new Texts();
+    protected final Logger log = Logger.getLogger(getClass().getName());
+
+    private char temp = ' ';
+    private int count;
 
     @Override
     public void getMove(char sign, char[][] tab,
@@ -17,14 +19,14 @@ public class ComputerPlayer implements Player {
 
         char opponentSign = sign;
 
-        System.out.println("I am in getMove method in ComputerPlayerClass");
+        log.info("I am in getMove method in ComputerPlayerClass");
 
         if ('X' == sign) {
             opponentSign = 'O';
         } else if ('O' == sign) {
             opponentSign = 'X';
         } else {
-            System.out.println("Wrong given sign.\nOpponent sign = given sign");
+            log.info("Wrong given sign.\nOpponent sign = given sign");
         }
 
         if (texts.easy().equals(difficultyLevel)) {
@@ -52,16 +54,12 @@ public class ComputerPlayer implements Player {
     }
 
     private boolean checkingColumns(Coordinates coordinates, char [][] tab, int size){
-        char temp = ' ';
-        int count;
         int col = -1;
 
         for (int j = 0 ; j < size ; j++){
             count = 0;
             for (int i = 0 ; i < size ; i++) {
-                if (tab[i][j] == ' ') {
-                    continue;
-                } else {
+                if (tab[i][j] != ' ') {
                     if (count == 0) {
                         temp = tab[i][j];
                         count++;
@@ -77,6 +75,7 @@ public class ComputerPlayer implements Player {
                 }
             }
         }
+
         if (col != -1) {
             for (int i = 0 ; i < size ; i++) {
                 if(tab[i][col] == ' ') {
@@ -90,16 +89,12 @@ public class ComputerPlayer implements Player {
     }
 
     private boolean checkingRows(Coordinates coordinates, char [][] tab, int size){
-        char temp = ' ';
-        int count;
         int row = -1;
 
         for (int i = 0 ; i < size ; i++){
             count = 0;
             for (int j = 0 ; j < size ; j++) {
-                if (tab[i][j] == ' ') {
-                    continue;
-                } else {
+                if (tab[i][j] != ' ') {
                     if (count == 0) {
                         temp = tab[i][j];
                         count++;
@@ -128,13 +123,9 @@ public class ComputerPlayer implements Player {
     }
 
     private boolean checkingDiagonal(Coordinates coordinates, char [][] tab, int size){
-        char temp = ' ';
-        int count = 0;
 
         for (int i = 0 ; i < size ; i++){
-            if (tab[i][i] == ' ') {
-                continue;
-            } else {
+            if (tab[i][i] != ' ') {
                 if (count == 0) {
                     temp = tab[i][i];
                     count++;
@@ -157,13 +148,9 @@ public class ComputerPlayer implements Player {
     }
 
     private boolean checkingAntiDiagonal(Coordinates coordinates, char [][] tab, int size){
-        char temp = ' ';
-        int count = 0;
 
         for (int i = 0 ; i < size ; i++){
-            if (tab[i][size - 1 - i] == ' ') {
-                continue;
-            } else {
+            if (tab[i][size - 1 - i] != ' ') {
                 if (count == 0) {
                     temp = tab[i][size - 1 - i];
                     count++;
@@ -175,7 +162,6 @@ public class ComputerPlayer implements Player {
                         if(tab[j][size - 1 - j] == ' ') {
                             coordinates.setRow(j);
                             coordinates.setColumn(size - 1 - j);
-                            //System.out.println("The condition for anti diagonal is true");
                             return true;
                         }
                     }

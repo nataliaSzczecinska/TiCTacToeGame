@@ -22,7 +22,7 @@ public class Texts {
         return "Choose your sign: ";
     }
 
-    public String difficultyLevel(){
+    public String difficultyLevel() {
         return "Choose the difficulty level: ";
     }
 
@@ -32,10 +32,6 @@ public class Texts {
 
     public String middle() {
         return " middle ";
-    }
-
-    public String difficult(){
-        return " difficult ";
     }
 
     public String statistic() {
@@ -63,8 +59,7 @@ public class Texts {
     }
 
     public String clearStatisticText(){
-        String text = allStatisticTitle() + clearStatisticNumber();
-        return text;
+        return allStatisticTitle() + clearStatisticNumber();
     }
 
     public String clear(){

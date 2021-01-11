@@ -7,16 +7,14 @@ import javafx.scene.Scene;
 import javafx.stage.*;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 
 public class TicTacToeApplication extends Application{
     private final FileService file = new FileService();
+    protected final Logger log = Logger.getLogger(getClass().getName());
+
     private Board board;
-    private int numberOfWinPlayer = 0;
-    private int numberOfWinComputer = 0;
-    private int numberOfStartGames = 0;
-    private int numberOfEndGames = 0;
-    private int numberOfDraws = 0;
     private int allNumberOfWinPlayer = 0;
     private int allNumberOfWinComputer = 0;
     private int allNumberOfStartGames = 0;
@@ -24,11 +22,14 @@ public class TicTacToeApplication extends Application{
     private int allNumberOfDraws = 0;
 
     public static void main(String[] args) {
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "ImageRotator");
         launch(args);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+
         try {
             board = new Board(stage);
             int dimension = board.getBottomHight() + board.getCentreWidth();
@@ -49,8 +50,7 @@ public class TicTacToeApplication extends Application{
 
     @Override
     public void stop() throws Exception {
-        try {
-            System.out.println("Start to save statistic...");
+            log.info("Start to save statistic...");
 
             try {
                 file.fileReader();
@@ -59,53 +59,19 @@ public class TicTacToeApplication extends Application{
                 allNumberOfWinPlayer = file.getAllNumberOfWinPlayer();
                 allNumberOfWinComputer = file.getAllNumberOfWinComputer();
                 allNumberOfDraws = file.getAllNumberOfDraws();
+
+                allNumberOfWinPlayer += board.getMove().getWinGame();
+                allNumberOfWinComputer += board.getMove().getLoseGame();
+                allNumberOfStartGames += board.getMove().getStartGame();
+                allNumberOfEndGames += board.getMove().getEndGame();
+                allNumberOfDraws += board.getMove().getDrawGame();
+
+                file.setStatistic(allNumberOfWinPlayer, allNumberOfWinComputer, allNumberOfStartGames,
+                        allNumberOfEndGames, allNumberOfDraws);
             } catch (IOException exception) {
-                System.out.println(exception);
-            }
-
-            System.out.println("numberOfWin = " + numberOfWinPlayer +
-                    "\nnumberOfLost = " + numberOfWinComputer +
-                    "\nnumberOfDarw = " + numberOfDraws +
-                    "\nstarts = " + numberOfStartGames +
-                    "\nends = " + numberOfEndGames +
-                    "\n********************************" +
-                    "\nnumberOfWin = " + allNumberOfWinPlayer +
-                    "\nnumberOfLost = " + allNumberOfWinComputer +
-                    "\nnumberOfDarw = " + allNumberOfDraws +
-                    "\nstarts = " + allNumberOfStartGames +
-                    "\nends = " + allNumberOfEndGames);
-            System.out.println();
-
-            numberOfWinPlayer = board.getMove().getWinGame();
-            numberOfWinComputer = board.getMove().getLoseGame();
-            numberOfStartGames = board.getMove().getStartGame();
-            numberOfEndGames = board.getMove().getEndGame();
-            numberOfDraws = board.getMove().getDrawGame();
-            allNumberOfWinPlayer += numberOfWinPlayer;
-            allNumberOfWinComputer += numberOfWinComputer;
-            allNumberOfStartGames += numberOfStartGames;
-            allNumberOfEndGames += numberOfEndGames;
-            allNumberOfDraws += numberOfDraws;
-
-            System.out.println("numberOfWin = " + numberOfWinPlayer +
-                    "\nnumberOfLost = " + numberOfWinComputer +
-                    "\nnumberOfDarw = " + numberOfDraws +
-                    "\nstarts = " + numberOfStartGames +
-                    "\nends = " + numberOfEndGames +
-                    "\n********************************" +
-                    "\nnumberOfWin = " + allNumberOfWinPlayer +
-                    "\nnumberOfLost = " + allNumberOfWinComputer +
-                    "\nnumberOfDarw = " + allNumberOfDraws +
-                    "\nstarts = " + allNumberOfStartGames +
-                    "\nends = " + allNumberOfEndGames);
-
-            file.setStatistic(allNumberOfWinPlayer, allNumberOfWinComputer, allNumberOfStartGames,
-                    allNumberOfEndGames, allNumberOfDraws);
-
-        } catch (Exception exception) {
-            System.out.println(exception);
-        } finally {
-            System.out.println("The stop application");
+                log.warning("There is an exception: " + exception);
+            } finally {
+            log.info("The stop application");
         }
     }
 }

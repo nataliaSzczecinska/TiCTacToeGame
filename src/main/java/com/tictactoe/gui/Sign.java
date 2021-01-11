@@ -32,8 +32,6 @@ public class Sign {
                     backgroundSize);
         }
 
-        Background background = new Background(backgroundImage);
-
-        return background;
+        return new Background(backgroundImage);
     }
 }
