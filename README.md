@@ -6,10 +6,10 @@ A game in which two players alternately put Xs and Os in compartments of a figur
 
  ## Screenshots
 
- ![Algorithm](src/main/resources/screenshots/1.jpg)
- ![Algorithm](src/main/resources/screenshots/2.jpg)
- ![Algorithm](src/main/resources/screenshots/3.jpg)
- ![Algorithm](src/main/resources/screenshots/4.jpg)
+ ![Algorithm](src/main/resources/screenshots/1.png)
+ ![Algorithm](src/main/resources/screenshots/2.png)
+ ![Algorithm](src/main/resources/screenshots/3.png)
+ ![Algorithm](src/main/resources/screenshots/4.png)
  
  ## Technologies
  JAVA version 11.0.9
