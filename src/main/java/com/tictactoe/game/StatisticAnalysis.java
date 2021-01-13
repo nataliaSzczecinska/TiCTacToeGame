@@ -23,18 +23,18 @@ public class StatisticAnalysis {
         this.drawGame = 0;
     }
 
-    public void setStatisticOfGame(char playerSign, char winnerSign) {
+    public void setStatisticOfGame(char playerSign, EnumResults winnerSign) {
 
-        if ('n' != winnerSign) {
+        if (EnumResults.n != winnerSign) {
             this.endGame++;
             log.info("Current endGames = " + endGame);
             switch (winnerSign) {
-                case 'd': {
+                case d: {
                     this.drawGame++;
                     log.info("Current draws = " + drawGame);
                     break;
-                } case 'X': {
-                    if ('X' == playerSign) {
+                } case X: {
+                    if (EnumResults.X.getSign() == playerSign) {
                         this.winGame++;
                         log.info("Current won = " + winGame);
                     } else {
@@ -44,7 +44,8 @@ public class StatisticAnalysis {
                     break;
                 }
                 default: {
-                    log.warning("There is an error! Wrong wining sign!");
+                    log.info("There is an error! Wrong wining sign!" +
+                            "The Enum is " + winnerSign);
                 }
             }
         }

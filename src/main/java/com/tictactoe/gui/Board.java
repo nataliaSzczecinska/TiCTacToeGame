@@ -4,6 +4,7 @@ import com.tictactoe.display.TextFactor;
 import com.tictactoe.display.Texts;
 import com.tictactoe.fileservice.FileService;
 import com.tictactoe.game.Coordinates;
+import com.tictactoe.game.EnumResults;
 import com.tictactoe.game.StatisticAnalysis;
 import com.tictactoe.game.TicTacToeGame;
 import com.tictactoe.buttons.ButtonFactor;
@@ -253,8 +254,8 @@ public class Board extends BorderPane {
         return new Scene(displayWinner);
     }
 
-    public void displayEndingWindow(char winnerSign, Stage stage){
-        if ('n' != winnerSign) {
+    public void displayEndingWindow(EnumResults winnerSign, Stage stage){
+        if (EnumResults.n != winnerSign) {
             Stage newWindow = new Stage();
             newWindow.initModality(Modality.WINDOW_MODAL);
             newWindow.initOwner(stage);
@@ -339,7 +340,7 @@ public class Board extends BorderPane {
     }
 
     private boolean isGameEnd() {
-        return ('n' != game.whoWin());
+        return (EnumResults.n != game.whoWin());
     }
 
     public static StatisticAnalysis getMove() {

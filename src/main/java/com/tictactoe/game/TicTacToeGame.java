@@ -1,5 +1,7 @@
 package com.tictactoe.game;
 
+import static com.tictactoe.game.EnumResults.*;
+
 import com.tictactoe.gui.Sign;
 import javafx.scene.control.Button;
 
@@ -25,17 +27,17 @@ public class TicTacToeGame {
     }
 
 
-    public char whoWin(){
-        if ('n' != checkColumns()){
+    public EnumResults whoWin(){
+        if (n != checkColumns()){
             return checkColumns();
         }
-        if ('n' != checkRows()) {
+        if (n != checkRows()) {
             return checkRows();
         }
-        if ('n' != checkDiagonal()) {
+        if (n != checkDiagonal()) {
             return checkDiagonal();
         }
-        if ('n' != checkAntiDiagonal()) {
+        if (n != checkAntiDiagonal()) {
             return checkAntiDiagonal();
         }
         return checkNoEmptyAreas();
@@ -99,21 +101,21 @@ public class TicTacToeGame {
 
     public String displayWinner (TicTacToeGame ticTacToeGame, char sign){
         String text;
-        char opponentChar = 'n';
+        char opponentChar = n.getSign();
 
-        if ('X' == sign) {
-            opponentChar = 'O';
-        } else if ('O' == sign) {
-            opponentChar = 'X';
+        if (X.getSign() == sign) {
+            opponentChar = O.getSign();
+        } else if (O.getSign() == sign) {
+            opponentChar = X.getSign();
         } else {
             log.warning("Given char is wrong");
         }
 
-        if (sign == ticTacToeGame.whoWin()) {
+        if (sign == ticTacToeGame.whoWin().getSign()) {
             text = "CONGRATULATION! You win the game!";
-        } else if (opponentChar == ticTacToeGame.whoWin()) {
+        } else if (opponentChar == ticTacToeGame.whoWin().getSign()) {
             text = "Sadly, you lose";
-        } else if ('d' == ticTacToeGame.whoWin()) {
+        } else if ('d' == ticTacToeGame.whoWin().getSign()) {
             text = "There is a draw";
         } else {
             log.warning("No one won. The game should not end");
@@ -123,25 +125,25 @@ public class TicTacToeGame {
         return text;
     }
 
-    public char checkColumns(){
+    public EnumResults checkColumns(){
         //check columns
         for (int i = 0 ; i < size ; i++) {
             char temp = signTab[i][0];
-            if (' ' != temp) {
+            if (empty.getSign() != temp) {
                 for (int j = 0 ; j < size ; j++) {
                     if (temp != signTab[i][j]) {
                         break;
                     }
                     if (size - 1 == j) {
-                        return temp;
+                        return enumValue(temp);
                     }
                 }
             }
         }
-        return 'n';
+        return n;
     }
 
-    public char checkRows(){
+    public EnumResults checkRows(){
         //check rows
         for (int i = 0 ; i < size ; i++) {
             char temp = signTab[0][i];
@@ -151,15 +153,15 @@ public class TicTacToeGame {
                         break;
                     }
                     if (size - 1 == j) {
-                        return temp;
+                        return enumValue(temp);
                     }
                 }
             }
         }
-        return 'n';
+        return n;
     }
 
-    public char checkAntiDiagonal(){
+    public EnumResults checkAntiDiagonal(){
         //check anti diagonal
         for (int i = 0 ; i < size ; i++) {
             char temp = signTab[0][size - 1];
@@ -168,14 +170,14 @@ public class TicTacToeGame {
                     break;
                 }
                 if (size - 1 == i) {
-                    return temp;
+                    return EnumResults.enumValue(temp);
                 }
             }
         }
-        return 'n';
+        return n;
     }
 
-    public char checkDiagonal(){
+    public EnumResults checkDiagonal(){
         //check diagonal
         for (int i = 0 ; i < size ; i++) {
             char temp = signTab[0][0];
@@ -184,24 +186,24 @@ public class TicTacToeGame {
                     break;
                 }
                 if (size - 1 == i) {
-                    return temp;
+                    return enumValue(temp);
                 }
             }
         }
-        return 'n';
+        return n;
     }
 
-    public char checkNoEmptyAreas(){
+    public EnumResults checkNoEmptyAreas(){
         //check if every area is taken
         for (int i = 0 ; i < size ; i++) {
             for (int j = 0 ; j < size ; j++) {
                 if (' ' == signTab[i][j]) {
-                    return 'n';
+                    return n;
                 }
             }
         }
 
-        return 'd';
+        return d;
     }
 
     public char[][] getSignTab() {
