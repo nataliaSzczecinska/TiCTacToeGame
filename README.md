@@ -13,7 +13,7 @@ A game in which two players alternately put Xs and Os in compartments of a figur
  
  ## Technologies
  JAVA version 11.0.9
- JAVAFX Ð version 11.0.2
+ JAVAFX version 11.0.2
  
  ## Setup
  Gradle -> Tasks -> application -> run
